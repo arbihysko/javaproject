@@ -1,0 +1,79 @@
+.root {
+    -fx-background-image: url("throwingDices.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+.button {
+    -fx-cursor: hand;
+}
+.startBtn {
+    -fx-background-color: rgba(255, 255, 255, .2);
+    -fx-text-fill:#0094C6;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 12px;
+    -fx-border-color: #0094C6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+.welcomeLabel {
+    -fx-text-fill: white;
+    -fx-font-size: 1.5em;
+    -fx-text-weight: bolder
+}
+.startBtn:hover {
+    -fx-background-color: #0094C6;
+    -fx-border: none;
+    -fx-text-fill: white;
+}
+.button:pressed {
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+.logInBtn {
+    -fx-text-fill: #0094C6;
+    -fx-font-size: 12px;
+    -fx-background-color: transparent;
+}
+.logInBtn:hover {
+    -fx-text-fill: blue;
+}
+.logInBtn:pressed {
+    -fx-text-fill: red;
+}
+
+.goBackBtn {
+    -fx-font-fmaily: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 1.5em;
+    -fx-background-color: transparent;
+    -fx-padding: 5px 15px;
+
+}
+.goBackBtn:hover {
+    -fx-background-color: rgba(255,255,255,.2);
+}
+
+.text-field {
+    -fx-max-width: 300px;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 12px;
+}
+
+.goToGameBtn {
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 2em;
+    -fx-font-weight: bolder;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 10px 15px;
+    -fx-border-color: #0094C6;
+    -fx-border-width: 1px;
+    -fx-text-fill: #0094C6;
+    -fx-background-color: transparent;
+}
+.goToGameBtn:hover {
+    -fx-background-color: #0094C6;
+    -fx-text-fill: white;
+}

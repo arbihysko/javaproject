@@ -1,10 +1,13 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,34 +24,45 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         stage.setTitle("Welcome");
 
         // Start game layout
-        VBox menuLayout = new VBox(20); // krijon nje VBox ku elementet jane spaced 20 px
+        BorderPane menuLayout = new BorderPane();
 
+        //HBox top = new HBox(20);
         Label topLabel = new Label("WELCOME TO THE GAME!");
+        topLabel.getStyleClass().add("welcomeLabel");
+        menuLayout.setTop(topLabel);
+        //top.getChildren().add(topLabel);
+        //top.setAlignment(Pos.CENTER);
+
+        VBox center = new VBox(10);
+
         Button startGame = new Button("Start Game");
-        startGame.setOnMouseClicked(e -> stage.setScene(choosePlayers));
-        menuLayout.getChildren().addAll(topLabel, startGame);
-        menuLayout.setAlignment(Pos.CENTER);
+        startGame.getStyleClass().add("startBtn");
+        startGame.setOnMouseClicked(e -> stage.setScene(Players.choose(stage, menuScene)));
 
-        menuScene = new Scene(menuLayout, 400, 400);
+        Button loadGame = new Button("Load Game");
+        loadGame.getStyleClass().add("startBtn");
 
-        // choose players layout
-        VBox choosePlayersLayout = new VBox(20);
+        center.getChildren().addAll(startGame, loadGame);
+        center.setAlignment(Pos.CENTER);
+        menuLayout.setCenter(center);
 
-        Label howManyPlayers = new Label("Zgjidhni sa lojtare jane!");
-        Button onePlayer = new Button("Luaj Solo");
-        Button twoPlayer = new Button("Luaj Dyshe");
-        Button threePlayer = new Button("Luaj Treshe");
-        Button fourPlayer = new Button("Luaj Katershe");
+        Button logIn = new Button("Log In");
+        logIn.getStyleClass().add("logInBtn");
 
-        Button goBackMain = new Button("Back");
-        goBackMain.setOnMouseClicked(e -> stage.setScene(menuScene));
+        menuLayout.setBottom(logIn);
 
-        choosePlayersLayout.getChildren().addAll(howManyPlayers, onePlayer, twoPlayer, threePlayer, fourPlayer, goBackMain);
-        choosePlayersLayout.setAlignment(Pos.CENTER);
 
-        choosePlayers = new Scene(choosePlayersLayout, 400, 400);
+        menuLayout.setAlignment(topLabel, Pos.CENTER);
+        menuLayout.setAlignment(center, Pos.CENTER);
+        menuLayout.setAlignment(logIn, Pos.CENTER);
+
+        menuLayout.setPadding(new Insets(20, 0, 20, 0));
+
+        menuScene = new Scene(menuLayout, 500, 400);
+        menuScene.getStylesheets().add("styles.css");
 
         stage.setScene(menuScene);
+        stage.setResizable(false);
         stage.show();
     }
 
