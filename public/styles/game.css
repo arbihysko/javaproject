@@ -1,0 +1,12 @@
+.check-box {
+    -fx-cursor:hand;
+    -fx-min-width: 54px;
+    -fx-background-color: red;
+}
+.check-box .box{
+    -fx-scale-x:0;
+    -fx-scale-y:0;
+}
+.check-box:selected{
+    -fx-text-fill: blue;
+}

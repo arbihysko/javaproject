@@ -13,56 +13,66 @@ import javafx.stage.Stage;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Scene menuScene, choosePlayers;
+    Scene menuScene; //set the scene
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
+    // metoda qe ekzekutohet kur run application
     public void start(Stage stage) throws Exception {
+
+        //Set the title of stage
         stage.setTitle("Welcome");
 
-        // Start game layout
+        //Start game layout -> BorderPane
         BorderPane menuLayout = new BorderPane();
 
-        //HBox top = new HBox(20);
+        //Vendosim lart 1 Label per welcome
         Label topLabel = new Label("WELCOME TO THE GAME!");
         topLabel.getStyleClass().add("welcomeLabel");
-        menuLayout.setTop(topLabel);
-        //top.getChildren().add(topLabel);
-        //top.setAlignment(Pos.CENTER);
+        menuLayout.setTop(topLabel); //konfiguron ne layout
 
+        //Center content -> VBox
         VBox center = new VBox(10);
 
+        //Butoni per te filluar lojen
         Button startGame = new Button("Start Game");
         startGame.getStyleClass().add("startBtn");
-        startGame.setOnMouseClicked(e -> stage.setScene(Players.choose(stage, menuScene)));
 
+        //Set new Scene -> CHOOSE PLAYER
+        startGame.setOnMouseClicked(e -> stage.setScene(Player.choose(stage, menuScene)));
+
+        //Load Game nga filet TODO
         Button loadGame = new Button("Load Game");
         loadGame.getStyleClass().add("startBtn");
 
-        center.getChildren().addAll(startGame, loadGame);
-        center.setAlignment(Pos.CENTER);
-        menuLayout.setCenter(center);
+        center.getChildren().addAll(startGame, loadGame);//konfigurojme ne VBox
+        center.setAlignment(Pos.CENTER);//pozicionojme ne qender
+        menuLayout.setCenter(center);//konfigurojme VBox -> layout
 
+        //Butoni per tu loguar
         Button logIn = new Button("Log In");
         logIn.getStyleClass().add("logInBtn");
 
         menuLayout.setBottom(logIn);
 
+        //Pozicionimi per secilen Node
+        BorderPane.setAlignment(topLabel, Pos.CENTER);
+        BorderPane.setAlignment(center, Pos.CENTER);
+        BorderPane.setAlignment(logIn, Pos.CENTER);
 
-        menuLayout.setAlignment(topLabel, Pos.CENTER);
-        menuLayout.setAlignment(center, Pos.CENTER);
-        menuLayout.setAlignment(logIn, Pos.CENTER);
-
+        //Hapesira e Layout nga borderat e dritares
         menuLayout.setPadding(new Insets(20, 0, 20, 0));
 
+        //setting the scene
         menuScene = new Scene(menuLayout, 500, 400);
-        menuScene.getStylesheets().add("styles.css");
+        menuScene.getStylesheets().add("public/styles/menu.css");//aplikimi i stylesheetsave
 
+        //setting the stage
         stage.setScene(menuScene);
-        stage.setResizable(false);
+//        stage.setResizable(false);
         stage.show();
     }
 
