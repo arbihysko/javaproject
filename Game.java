@@ -14,12 +14,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Timer;
+import java.sql.Array;
+import java.util.*;
 
 import javax.swing.*;
-import java.util.Random;
-import java.util.TimerTask;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class Game {
@@ -54,8 +53,10 @@ public class Game {
     private CheckBox dice5;
 
     //perdoren te Timer
+    static Timer setTimeout = new Timer();
     static int timerTurnMax;
     static int timerTurn = 0;
+
 
     //constuctor me numrin e players dhe emrat
     public Game(int num, String[] names, Stage stage){
@@ -123,7 +124,11 @@ public class Game {
         Button throwDices = new Button("Hidh Zaret");
         Button skip = new Button("Skip");
 
-        //Timeout function per te hedhur zaret
+        //gjenerojme nje numer random per sa here do behet animimi
+        timerTurnMax = rand.nextInt(5)+10;
+
+        System.out.println(timerTurnMax);
+
         throwDices.setOnAction(event -> {
             //marrim zarat e selektuar.. nese jemi ne try e pare do na ktheje te gjithe zarat
             ArrayList<CheckBox> selectedDices = getSelectedDices(dice1,dice2,dice3,dice4,dice5);
@@ -137,9 +142,6 @@ public class Game {
                     //disable the buttons
                     throwDices.setDisable(true);
                     skip.setDisable(true);
-
-                    //gjenerojme nje numer random per sa here do behet animimi
-                    timerTurnMax = rand.nextInt(5)+10;
 
                     //ne fund te animimit
                     if (++timerTurn>timerTurnMax){
@@ -160,25 +162,34 @@ public class Game {
                 }
             },0, 120);
 
-            //Deselect the selected dices
-            for (int i = 0; i < selectedDices.size(); i++) {
-                selectedDices.get(i).setSelected(false);
-            }
+            int[] dicesVals = new int[5];
 
-            int[] dicesVals = {
-                    Integer.parseInt(dice1.getText()),
-                    Integer.parseInt(dice2.getText()),
-                    Integer.parseInt(dice3.getText()),
-                    Integer.parseInt(dice4.getText()),
-                    Integer.parseInt(dice5.getText()),
-            };
+            setTimeout.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(() -> {
 
-            points[playerAtTurn][raund] = CalcPts.calcPoits(raund, dicesVals);
-            this.updatePtsList(raund, points[playerAtTurn][raund]);
-            if(++playerAtTurn == playerNumber){
-                playerAtTurn = 0;
-                raund++;
-            }
+                        System.out.println("Chance: "+ chance + "\nRond: "+raund+"\n");
+
+                        //Deselect the selected dices
+                        for (int i = 0; i < selectedDices.size(); i++) {
+                            selectedDices.get(i).setSelected(false);
+                        }
+
+                        dicesVals[0] = Integer.parseInt(dice1.getText());
+                        dicesVals[1] = Integer.parseInt(dice2.getText());
+                        dicesVals[2] = Integer.parseInt(dice3.getText());
+                        dicesVals[3] = Integer.parseInt(dice4.getText());
+                        dicesVals[4] = Integer.parseInt(dice5.getText());
+
+                        System.out.println(Arrays.toString(dicesVals));
+
+                        points[playerAtTurn][raund] = CalcPts.calcPoits(raund, dicesVals);
+                        updatePtsList(points[playerAtTurn][raund], playerAtTurn, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+                    });
+                }
+            }, ((120*timerTurnMax)+200));
+
         });
 
         //konfigurojme butonat ne layout
@@ -191,6 +202,9 @@ public class Game {
         gameScene = new Scene(gameLayout, 1024, 600);
         gameScene.getStylesheets().add("public/styles/game.css");
         stage.setScene(gameScene);
+        stage.setOnCloseRequest(e -> {
+            setTimeout.cancel();
+        });
     }
 
     //ky funksion do te ktheje zarat e selektuar
@@ -217,15 +231,60 @@ public class Game {
             if (dice5.isSelected())
                 dices.add(dice5);
         }
-
-        //rrit try
-        chance++;
+        chance ++;
 
         return dices;
     }
 
-    public void updatePtsList(int raund, int pts){
-
+    public static void updatePtsList(int pts, int playerTurn, ListView playerOnePts, ListView playerTwoPts, ListView playerThreePts, ListView playerFourPts){
+        if (playerAtTurn==0) {
+            if (chance < 3) {
+                try {
+                    playerOnePts.getItems().set(raund, pts);
+                } catch (Exception ex) {
+                    playerOnePts.getItems().add(pts);
+                }
+            } else {
+                playerAtTurn++;
+                chance = 0;
+            }
+        }
+        if (playerAtTurn==1) {
+            if (chance < 3) {
+                try {
+                    playerTwoPts.getItems().set(raund, pts);
+                } catch (Exception ex) {
+                    playerTwoPts.getItems().add(pts);
+                }
+            } else {
+                playerAtTurn++;
+                chance = 0;
+            }
+        }
+        if (playerAtTurn==2) {
+            if (chance < 3) {
+                try {
+                    playerThreePts.getItems().set(raund, pts);
+                } catch (Exception ex) {
+                    playerThreePts.getItems().add(pts);
+                }
+            } else {
+                playerAtTurn++;
+                chance = 0;
+            }
+        }
+        if (playerAtTurn==3) {
+            if (chance < 3) {
+                try {
+                    playerFourPts.getItems().set(raund, pts);
+                } catch (Exception ex) {
+                    playerFourPts.getItems().add(pts);
+                }
+            } else {
+                playerAtTurn++;
+                chance = 0;
+            }
+        }
     }
 
 }

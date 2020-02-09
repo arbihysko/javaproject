@@ -1,5 +1,6 @@
 public class CalcPts {
     static int calcPoits(int round, int[] diceVals){
+        System.out.println(diceVals.toString());
         int pts = -1;
 
         switch (round){
@@ -7,6 +8,8 @@ public class CalcPts {
                 pts = calcNjishe(diceVals);
                 break;
         }
+
+        System.out.println(pts);
 
         return pts;
     }
