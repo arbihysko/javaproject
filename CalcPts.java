@@ -236,10 +236,7 @@ public class CalcPts {
 
     static int calcTeKaterta(int[] diceVals) {
         Arrays.sort(diceVals);
-        int sum = 0;
-        for (int k = 0; k < 5; k++) {
-            sum += diceVals[k];
-        }
+
         int n = 0;
         for (int i = 0; i < 4; i++) {
             if (diceVals[i] == diceVals[i + 1] - 1) {
@@ -247,7 +244,7 @@ public class CalcPts {
             }
         }
         if (n == 3) {
-            return sum;
+            return 30;
         } else {
             return 0;
         }
@@ -256,10 +253,7 @@ public class CalcPts {
 
     static int calcTePesta(int[] diceVals) {
         Arrays.sort(diceVals);
-        int sum = 0;
-        for (int k = 0; k < 5; k++) {
-            sum += diceVals[k];
-        }
+
         int n = 0;
         for (int i = 0; i < 4; i++) {
             if (diceVals[i] == diceVals[i + 1] - 1) {
@@ -267,17 +261,14 @@ public class CalcPts {
             }
         }
         if (n == 4) {
-            return sum;
+            return 40;
         } else {
             return 0;
         }
 
     }
     static int calcTeNjejtat(int[] diceVals){
-        int sum = 0;
-        for (int k = 0; k < 5; k++) {
-            sum += diceVals[k];
-        }
+
         int n=0;
         for(int i=0;i<4;i++){
             if(diceVals[i]==diceVals[i+1]){
@@ -285,7 +276,7 @@ public class CalcPts {
             }
         }
         if(n==4) {
-            return sum;
+            return 50;
         }
         else{
             return 0;
