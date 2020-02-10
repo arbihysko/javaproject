@@ -165,13 +165,21 @@ public class Game {
         throwDices.getStyleClass().add("btn-blue");
         skip.getStyleClass().add("btn-red");
 
+        int[] dicesVals = new int[5];
+
         skip.setOnMouseClicked(e -> {
-            playerAtTurn++;
-            chance = 0;
+            if ((raund==5||raund==14)&&playerAtTurn==playerNumber-1)
+                updateSpecial(playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+            else {
+                playerAtTurn++;
+                chance = 0;
+            }
             throwDices.setText("Hidh Zaret");
             throwDices.setDisable(false);
             skip.setDisable(true);
+
         });
+
         skip.setDisable(true);
 
         dice1.setOnAction(e -> throwDices.setDisable(false));
@@ -186,6 +194,7 @@ public class Game {
         System.out.println(timerTurnMax);
 
         throwDices.setOnAction(event -> {
+
 
             //marrim zarat e selektuar.. nese jemi ne try e pare do na ktheje te gjithe zarat
             ArrayList<CheckBox> selectedDices = getSelectedDices(dice1,dice2,dice3,dice4,dice5);
@@ -228,14 +237,10 @@ public class Game {
                 }
             },0, 120);
 
-            int[] dicesVals = new int[5];
-
             setTimeout.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     Platform.runLater(() -> {
-
-                        System.out.println("Chance: "+ chance + "\nRond: "+raund+"\n");
 
                         //Deselect the selected dices
                         for (CheckBox selectedDice : selectedDices) {
@@ -256,8 +261,19 @@ public class Game {
                         }
 
                         points[playerAtTurn][raund] = CalcPts.calcPoits(raund, dicesVals, points, playerAtTurn);
-                        updatePtsList(points[playerAtTurn][raund], playerNumber, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+                        updatePtsList(points[playerAtTurn][raund], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+
+                        System.out.println("Chance: "+ chance + "\nRaund: "+raund+"\nTurn: "+playerAtTurn+"\n");
+
+                        if ((raund==5||raund==14)&&chance==3&&(playerAtTurn==(playerNumber-1)))
+                            updateSpecial(playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+
+                        if (chance==3) {
+                            playerAtTurn++;
+                            chance = 0;
+                        }
                     });
+
                 }
             }, ((120*timerTurnMax)+200));
 
@@ -313,7 +329,7 @@ public class Game {
         return dices;
     }
 
-    public static void updatePtsList(int pts, int playerNum, ListView<Integer> playerOnePts, ListView<Integer> playerTwoPts, ListView<Integer> playerThreePts, ListView<Integer> playerFourPts){
+    public static void updatePtsList(int pts, ListView<Integer> playerOnePts, ListView<Integer> playerTwoPts, ListView<Integer> playerThreePts, ListView<Integer> playerFourPts){
         if (playerAtTurn==0) {
             if (chance <= 3) {
                 try {
@@ -321,20 +337,15 @@ public class Game {
                 } catch (Exception ex) {
                     playerOnePts.getItems().add(pts);
                 }
-            } if (chance==3) {
-                playerAtTurn++;
-                chance = 0;
             }
         } else if (playerAtTurn==1) {
             if (chance <= 3) {
                 try {
                     playerTwoPts.getItems().set(raund, pts);
                 } catch (Exception ex) {
-                    playerTwoPts.getItems().add(pts);
+                        playerTwoPts.getItems().add(pts);
+
                 }
-            } if (chance==3) {
-                playerAtTurn++;
-                chance = 0;
             }
         } else if (playerAtTurn==2) {
             if (chance <= 3) {
@@ -343,9 +354,6 @@ public class Game {
                 } catch (Exception ex) {
                     playerThreePts.getItems().add(pts);
                 }
-            } if (chance==3) {
-                playerAtTurn++;
-                chance = 0;
             }
         } else if (playerAtTurn==3) {
             if (chance <= 3) {
@@ -354,10 +362,41 @@ public class Game {
                 } catch (Exception ex) {
                     playerFourPts.getItems().add(pts);
                 }
-            } if (chance==3){
-                playerAtTurn++;
-                chance = 0;
             }
+        }
+    }
+
+    static void updateSpecial(int playerNumber, int[][] points, int[] dicesVals, ListView<Integer> playerOnePts, ListView<Integer> playerTwoPts, ListView<Integer> playerThreePts, ListView<Integer> playerFourPts) {
+        if (raund==5) {
+            raund++;
+            for (int i = 0; i < playerNumber; i++) {
+                playerAtTurn = i;
+                points[i][6] = CalcPts.calcPoits(6, dicesVals, points, playerAtTurn);
+                updatePtsList(points[i][6], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+            }
+            raund++;
+            for (int i = 0; i < playerNumber; i++) {
+                playerAtTurn = i;
+                points[i][7] = CalcPts.calcPoits(7, dicesVals, points, playerAtTurn);
+                updatePtsList(points[i][6], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+            }
+            raund++;
+            chance = 0;
+            playerAtTurn = 0;
+        } else {
+            raund++;
+            for (int i = 0; i < playerNumber; i++) {
+                playerAtTurn = i;
+                points[i][15] = CalcPts.calcPoits(15, dicesVals, points, playerAtTurn);
+                updatePtsList(points[i][15], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+            }
+            raund++;
+            for (int i = 0; i < playerNumber; i++) {
+                playerAtTurn = i;
+                points[i][16] = CalcPts.calcPoits(16, dicesVals, points, playerAtTurn);
+                updatePtsList(points[i][16], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+            }
+            AlertBox.display("game over", "najs");
         }
     }
 

@@ -36,6 +36,7 @@
 .list-view {
     -fx-max-width: 200px;
     -fx-background-color: transparent;
+    -fx-min-height: 470px;
 }
 
 .list-cell {

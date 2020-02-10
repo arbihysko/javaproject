@@ -130,7 +130,7 @@ public class CalcPts {
     static int calcPiketeSiperme(int[][] points, int turn){
         int sum=0;
         for(int i=0;i<6;i++){
-            sum+=points[turn][i]
+            sum+=points[turn][i];
         }
         return sum;
     }
