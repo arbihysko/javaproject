@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class CalcPts {
 
     //round -> raundi; diceVals -> array me vlerat e zareve; points -> array me piket
-    static int calcPoits(int round, int turn, int[] diceVals, int[][] points) {
+    static int calcPoits(int round, int[] diceVals, int[][] points, int turn) {
         int pts = -1;
 
         switch (round) {
