@@ -255,7 +255,7 @@ public class Game {
                         }
 
                         points[playerAtTurn][raund] = CalcPts.calcPoits(raund, dicesVals, points);
-                        updatePtsList(points[playerAtTurn][raund], playerNumber, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+                        updatePtsList(points[playerAtTurn][raund], playerAtTurn, playerNumber, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
                     });
                 }
             }, ((120*timerTurnMax)+200));
