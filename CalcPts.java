@@ -26,24 +26,28 @@ public class CalcPts {
                 pts=calcGjashta(diceVals);
                 break;
             case 6:
+            case 7:
+
+
+            case 8:
                 pts=calcTreshet(diceVals);
                 break;
-            case 7:
+            case 9:
                 pts=calckatershet(diceVals);
                 break;
-            case 8:
+            case 10:
                 pts=calcTreDy(diceVals);
                 break;
-            case 9:
+            case 11:
                 pts=calcTeKaterta(diceVals);
                 break;
-            case 10:
+            case 12:
                 pts=calcTePesta(diceVals);
                 break;
-            case 11:
+            case 13:
                 pts=calcTeNjejtat(diceVals);
                 break;
-            case 12:
+            case 14:
                 pts=calcSkaRendesi(diceVals);
                 break;
 
@@ -109,6 +113,9 @@ public class CalcPts {
                 pts++;
         }
         return pts;
+    }
+    static int calcPiketeSiperme(int[][] points){
+        for
     }
 
     static int calcTreshet(int[] diceVals) {
