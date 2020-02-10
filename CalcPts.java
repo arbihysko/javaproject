@@ -1,8 +1,9 @@
 import java.util.Arrays;
 
 public class CalcPts {
-    
-    static int calcPoits(int round, int[] diceVals) {
+
+    //round -> raundi; diceVals -> array me vlerat e zareve; points -> array me piket
+    static int calcPoits(int round, int[] diceVals, int[][] points) {
         int pts = -1;
 
         switch (round) {
