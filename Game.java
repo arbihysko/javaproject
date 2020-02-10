@@ -65,7 +65,7 @@ public class Game {
         this.stage = stage;
         playerNumber = num;
         playerNames = names;
-        points = new int[num][13];
+        points = new int[num][17];
         this.generateGame();
     }
 
@@ -93,7 +93,7 @@ public class Game {
         roundsListView = new ListView<>();
         roundsListView.setMinWidth(300);
         roundsListView.getStyleClass().add("roundsList");
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 17; i++) {
             roundsListView.getItems().add(Round.rounds[i]);
         }
 
@@ -186,6 +186,7 @@ public class Game {
         System.out.println(timerTurnMax);
 
         throwDices.setOnAction(event -> {
+
             //marrim zarat e selektuar.. nese jemi ne try e pare do na ktheje te gjithe zarat
             ArrayList<CheckBox> selectedDices = getSelectedDices(dice1,dice2,dice3,dice4,dice5);
 

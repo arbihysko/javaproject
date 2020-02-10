@@ -1,12 +1,74 @@
+.root {
+    -fx-background-color: linear-gradient(#111 60%, #333     100%)
+}
 .check-box {
     -fx-cursor:hand;
+    -fx-text-fill: transparent;
     -fx-min-width: 54px;
-    -fx-background-color: red;
+    -fx-min-height: 54px;
+    -fx-background-size: contain;
+    -fb-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
 }
 .check-box .box{
     -fx-scale-x:0;
     -fx-scale-y:0;
 }
 .check-box:selected{
-    -fx-text-fill: blue;
+    -fx-scale-x:1.1;
+    -fx-scale-y:1.1;
+    -fx-translate-y: -5px;
+}
+
+.label {
+    -fx-min-width: 200px;
+    -fx-alignment: center;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 18px;
+}
+.roundsLabel {
+    -fx-min-width: 300px;
+}
+
+.list-view {
+    -fx-max-width: 200px;
+    -fx-background-color: transparent;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+.roundsList .list-cell {
+    -fx-alignment: baseline-left;
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+.button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+.btn-blue {
+    -fx-background-color: #41EAD4;
+}
+.btn-red {
+    -fx-background-color: #F71735;
 }

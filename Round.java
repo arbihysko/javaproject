@@ -6,13 +6,17 @@ public class Round {
         "Katra",
         "Pesa",
         "Gjashta",
+        "Piket e siperme",
+        "Bonus",
         "Tre me nje vlere",
         "Kater me nje vlere",
         "Tre dhe Dy",
         "Kater te njepasnjeshme",
         "Pese te njepasnjeshme",
         "E njejta vlere",
-        "Cdo Rast"
+        "Cdo Rast",
+        "Piket e siperme",
+        "Total"
     };
     private String roundName;
     int [] playerOnePts = new int[13];
