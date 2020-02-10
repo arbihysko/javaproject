@@ -114,8 +114,7 @@ public class CalcPts {
         }
         return pts;
     }
-    static int calcPiketeSiperme(int[][] points){
-        for
+    static int calcPiketeSiperme(int[][] points){ for
     }
 
     static int calcTreshet(int[] diceVals) {
