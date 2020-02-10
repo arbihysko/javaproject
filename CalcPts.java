@@ -26,25 +26,37 @@ public class CalcPts {
                 pts=calcGjashta(diceVals);
                 break;
             case 6:
-                pts=calcTreshet(diceVals);
+                pts=calcPiketeSiperme(points, turn);
                 break;
             case 7:
-                pts=calckatershet(diceVals);
+                pts=calcBonus(points, turn);
                 break;
             case 8:
-                pts=calcTreDy(diceVals);
+                pts=calcTreshet(diceVals);
                 break;
             case 9:
-                pts=calcTeKaterta(diceVals);
+                pts=calckatershet(diceVals);
                 break;
             case 10:
-                pts=calcTePesta(diceVals);
+                pts=calcTreDy(diceVals);
                 break;
             case 11:
-                pts=calcTeNjejtat(diceVals);
+                pts=calcTeKaterta(diceVals);
                 break;
             case 12:
+                pts=calcTePesta(diceVals);
+                break;
+            case 13:
+                pts=calcTeNjejtat(diceVals);
+                break;
+            case 14:
                 pts=calcSkaRendesi(diceVals);
+                break;
+            case 15:
+                pts=calcPiketePoshtme(points, turn);
+                break;
+            case 16:
+                pts=calcTotali(points, turn);
                 break;
 
         }
@@ -71,6 +83,7 @@ public class CalcPts {
             if (diceVals[i] == 2)
                 pts++;
         }
+        pts=2*pts;
         return pts;
     }
 
@@ -80,6 +93,7 @@ public class CalcPts {
             if (diceVals[i] == 3)
                 pts++;
         }
+        pts=3*pts;
         return pts;
     }
 
@@ -89,6 +103,7 @@ public class CalcPts {
             if (diceVals[i] == 4)
                 pts++;
         }
+        pts=4*pts;
         return pts;
 
     }
@@ -99,6 +114,7 @@ public class CalcPts {
             if (diceVals[i] == 5)
                 pts++;
         }
+        pts=5*pts;
         return pts;
     }
 
@@ -108,8 +124,24 @@ public class CalcPts {
             if (diceVals[i] == 6)
                 pts++;
         }
+        pts=6*pts;
         return pts;
     }
+    static int calcPiketeSiperme(int[][] points, int turn){
+        int sum=0;
+        for(int i=0;i<6;i++){
+            sum+=points[turn][i]
+        }
+        return sum;
+    }
+    static int calcBonus(int[][] points,int turn){
+        if(points[turn][6]>63) {
+            return 35;
+        }
+        else {
+            return 0;
+        }
+        }
 
     static int calcTreshet(int[] diceVals) {
         int pts = 0;
@@ -266,6 +298,18 @@ public class CalcPts {
         }
         return sum;
 
+    }
+    static int calcPiketePoshtme(int[][] points,int turn){
+        int sum=0;
+        for (int i=7;i<14;i++){
+            sum+=points[turn][i];
+        }
+        return sum;
+    }
+    static int calcTotali(int[][] points,int turn){
+        int sum=0;
+        sum=points[turn][6]+points[turn][7]+points[turn][15];
+        return  sum;
     }
 
 }
