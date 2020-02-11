@@ -37,11 +37,31 @@ public class Game {
     static int raund;
     static int playerAtTurn;
 
+    public static String[] raunds = {
+            "Njesha",
+            "Dysha",
+            "Tresha",
+            "Katra",
+            "Pesa",
+            "Gjashta",
+            "Piket e siperme",
+            "Bonus",
+            "Tre me nje vlere",
+            "Kater me nje vlere",
+            "Tre dhe Dy",
+            "Kater te njepasnjeshme",
+            "Pese te njepasnjeshme",
+            "E njejta vlere",
+            "Cdo Rast",
+            "Piket e siperme",
+            "Total"
+    };
+
     //random object
     Random rand = new Random();
 
     //deklarimi i ListViews qe do te perdoren per te shfaqur piket
-    ListView<String> roundsListView;
+    ListView<String> raundsListView;
     ListView<Integer> playerOnePts;
     ListView<Integer> playerTwoPts;
     ListView<Integer> playerThreePts;
@@ -90,16 +110,16 @@ public class Game {
         HBox scores = new HBox(20);
 
         //shfaq raundet
-        roundsListView = new ListView<>();
-        roundsListView.setMinWidth(300);
-        roundsListView.getStyleClass().add("roundsList");
+        raundsListView = new ListView<>();
+        raundsListView.setMinWidth(300);
+        raundsListView.getStyleClass().add("roundsList");
         for (int i = 0; i < 17; i++) {
-            roundsListView.getItems().add(Round.rounds[i]);
+            raundsListView.getItems().add(raunds[i]);
         }
 
         //shfaq piket per player1
         playerOnePts = new ListView<>();
-        scores.getChildren().addAll(roundsListView, playerOnePts);
+        scores.getChildren().addAll(raundsListView, playerOnePts);
 
         if (playerNumber>1){
             Label player2 = new Label(playerNames[1]);
@@ -190,8 +210,6 @@ public class Game {
 
         //gjenerojme nje numer random per sa here do behet animimi
         timerTurnMax = rand.nextInt(5)+10;
-
-        System.out.println(timerTurnMax);
 
         throwDices.setOnAction(event -> {
 
@@ -396,7 +414,7 @@ public class Game {
                 points[i][16] = CalcPts.calcPoits(16, dicesVals, points, playerAtTurn);
                 updatePtsList(points[i][16], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
             }
-            AlertBox.display("game over", "najs");
+            //AlertBox.display("game over", "najs");
         }
     }
 

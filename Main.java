@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -39,14 +40,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         //Butoni per te filluar lojen
         Button startGame = new Button("Start Game");
-        startGame.getStyleClass().add("startBtn");
 
         //Set new Scene -> CHOOSE PLAYER
         startGame.setOnMouseClicked(e -> stage.setScene(Player.choose(stage, menuScene)));
 
         //Load Game nga filet TODO
         Button loadGame = new Button("Load Game");
-        loadGame.getStyleClass().add("startBtn");
 
         center.getChildren().addAll(startGame, loadGame);//konfigurojme ne VBox
         center.setAlignment(Pos.CENTER);//pozicionojme ne qender
@@ -54,7 +53,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         //Butoni per tu loguar
         Button logIn = new Button("Log In");
-        logIn.getStyleClass().add("logInBtn");
+        logIn.setOnAction(e -> popWindow.logIn());
+        logIn.getStyleClass().add("signUpBtn");
 
         menuLayout.setBottom(logIn);
 
@@ -65,10 +65,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         //Hapesira e Layout nga borderat e dritares
         menuLayout.setPadding(new Insets(20, 0, 20, 0));
+        menuLayout.setStyle("-fx-background-image: url('public/images/throwingDices.jpg')");
 
         //setting the scene
         menuScene = new Scene(menuLayout, 500, 400);
-        menuScene.getStylesheets().add("public/styles/menu.css");//aplikimi i stylesheetsave
+        menuScene.getStylesheets().add("public/styles/game.css");//aplikimi i stylesheetsave
 
         //setting the stage
         stage.setScene(menuScene);
@@ -79,5 +80,17 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent actionEvent) {
 
+    }
+
+    public static boolean validateFormNotEmpty(int plNum, TextField[] input, Button submit) {
+        boolean val = true;
+        for (int i = 0; i < plNum; i++) {
+            if (input[i].getText().equals("")) {
+                input[i].getStyleClass().add("fieldValError");
+                submit.setDisable(true);
+                val = false;
+            }
+        }
+        return val;
     }
 }

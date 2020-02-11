@@ -292,7 +292,7 @@ public class CalcPts {
     }
     static int calcPiketePoshtme(int[][] points,int turn){
         int sum=0;
-        for (int i=7;i<14;i++){
+        for (int i=7;i<15;i++){
             sum+=points[turn][i];
         }
         return sum;

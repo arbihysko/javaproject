@@ -11,6 +11,43 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Player {
+    private int id;
+    private String name;
+    private String userName;
+    private int highScore;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     //metoda choose -> krijon pamjen grafike per te zgjedhur lojtaret
     public static Scene choose(Stage stage, Scene menuScene){
         Scene choosePlayersScene;
@@ -59,22 +96,17 @@ public class Player {
         threePlayer.setMinWidth(120);
         fourPlayer.setMinWidth(120);
 
-        //shtojme klasen startBtn per cdo buton
-        solo.getStyleClass().add("startBtn");
-        twoPlayer.getStyleClass().add("startBtn");
-        threePlayer.getStyleClass().add("startBtn");
-        fourPlayer.getStyleClass().add("startBtn");
-
         //konfigurojme butonat ne VBox
         gameMode.getChildren().addAll(solo, twoPlayer, threePlayer, fourPlayer);
         gameMode.setAlignment(Pos.CENTER);
 
         //konfigurojme center content ne Layout
         choosePlayersLayout.setCenter(gameMode);
+        choosePlayersLayout.setStyle("-fx-background-image: url('public/images/throwingDices.jpg')");
 
         //setting the scene
         choosePlayersScene =  new Scene(choosePlayersLayout, 500, 400);
-        choosePlayersScene.getStylesheets().add("public/styles/menu.css");
+        choosePlayersScene.getStylesheets().add("public/styles/game.css");
 
         //kthejme klasen
         return  choosePlayersScene;
@@ -107,6 +139,11 @@ public class Player {
         //layout per center section -> VBox
         VBox names = new VBox(10);
 
+        //Label per validation errors
+        Label valErrorLabel = new Label();
+        valErrorLabel.getStyleClass().add("valErrorLabel");
+        names.getChildren().add(valErrorLabel);
+
         //TextFields
         TextField player1 = new TextField();
         player1.setPromptText("Lojtari i pare");
@@ -137,10 +174,40 @@ public class Player {
         HBox lowerBtn = new HBox();
         Button createGame = new Button("→");
         createGame.setOnMouseClicked(e -> {
+            Game newGame = null;
+
             //mbledhim tekstet ne te gjitha text fields
             String[] playerNames = {player1.getText(), player2.getText(), player3.getText(), player4.getText()};
-            //krijojme GAME
-            Game newGame = new Game(playersNum, playerNames, stage);
+
+            TextField[] playersInput = {player1,player2,player3,player4};
+            if (Main.validateFormNotEmpty(playersNum, playersInput,createGame)){
+                newGame = new Game(playersNum, playerNames, stage);
+            } else {
+                createGame.setDisable(true);
+                valErrorLabel.setText("Emri eshte bosh!");
+            }
+        });
+
+        //setOnAction e TextField
+        player1.setOnKeyPressed(e -> {
+            player1.getStyleClass().remove("fieldValError");
+            valErrorLabel.setText("");
+            createGame.setDisable(false);
+        });
+        player2.setOnKeyPressed(e -> {
+            player2.getStyleClass().remove("fieldValError");
+            valErrorLabel.setText("");
+            createGame.setDisable(false);
+        });
+        player3.setOnKeyPressed(e -> {
+            player3.getStyleClass().remove("fieldValError");
+            valErrorLabel.setText("");
+            createGame.setDisable(false);
+        });
+        player4.setOnKeyPressed(e -> {
+            player4.getStyleClass().remove("fieldValError");
+            valErrorLabel.setText("");
+            createGame.setDisable(false);
         });
 
         createGame.getStyleClass().add("goToGameBtn");
@@ -155,10 +222,11 @@ public class Player {
         //Layout Settings
         names.setPadding(new Insets(50, 0, 0 , 0));
         setPlayerNames.setCenter(names);
+        setPlayerNames.setStyle("-fx-background-image: url('public/images/throwingDices.jpg')");
 
         //Scene Settings
         setNamesScene = new Scene(setPlayerNames, 500, 400);
-        setNamesScene.getStylesheets().add("public/styles/menu.css");
+        setNamesScene.getStylesheets().add("public/styles/game.css");
         return setNamesScene;
     }
 }
