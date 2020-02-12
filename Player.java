@@ -1,3 +1,4 @@
+import com.sun.glass.ui.EventLoop;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,11 +11,31 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.sql.*;
+
 public class Player {
+    private boolean userSigned;
     private int id;
     private String name;
     private String userName;
     private int highScore;
+
+    public Player() {
+        this(-1, "", "", -1);
+        this.userSigned = false;
+    }
+
+    public Player(int id, String name, String userName, int highScore) {
+        this.id = id;
+        this.name = name;
+        this.userName = userName;
+        this.highScore = highScore;
+        this.userSigned = true;
+    }
+
+    public boolean getUserSigned() {
+        return userSigned;
+    }
 
     public int getId() {
         return id;
@@ -49,24 +70,36 @@ public class Player {
     }
 
     //metoda choose -> krijon pamjen grafike per te zgjedhur lojtaret
-    public static Scene choose(Stage stage, Scene menuScene){
+    public static Scene choose(Stage stage, Scene menuScene) {
         Scene choosePlayersScene;
 
         BorderPane choosePlayersLayout = new BorderPane();
 
-        //setting pjesen e siperme te layout
-        HBox top = new HBox(53);
-        //butoni goBack -> Main
-        Button goBackMain = new Button("←");
-        goBackMain.getStyleClass().add("goBackBtn");
-        goBackMain.setOnMouseClicked(e -> stage.setScene(menuScene));
+        //setting top section layout -> HBox
+        VBox top = new VBox();
 
-        //topLabel setting
-        Label topLabel = new Label("Zgjidhni numrin e lojtareve!");
-        topLabel.getStyleClass().add("welcomeLabel");
-        topLabel.setPadding(new Insets(7));
+        HBox btnBox = new HBox();
 
-        top.getChildren().addAll(goBackMain, topLabel);
+        //goBack button
+        Button goBack = new Button("←");
+        goBack.getStyleClass().add("goBackBtn");
+        btnBox.getChildren().add(goBack);
+
+        //topLabel
+        HBox labelBox = new HBox();
+        Label hintLabel = new Label("Zgjidhni numrin e lojtareve!");
+        labelBox.getChildren().add(hintLabel);
+        labelBox.setAlignment(Pos.CENTER);
+
+        top.getChildren().addAll(btnBox,labelBox);
+
+        if (menuScene!=null) {
+            goBack.setOnMouseClicked(e -> stage.setScene(menuScene));
+        }
+        else {
+            goBack.setVisible(false);
+        }
+
         choosePlayersLayout.setTop(top);
 
         //setting center content
@@ -105,33 +138,38 @@ public class Player {
         choosePlayersLayout.setStyle("-fx-background-image: url('public/images/throwingDices.jpg')");
 
         //setting the scene
-        choosePlayersScene =  new Scene(choosePlayersLayout, 500, 400);
+        choosePlayersScene = new Scene(choosePlayersLayout, 500, 400);
         choosePlayersScene.getStylesheets().add("public/styles/game.css");
 
         //kthejme klasen
-        return  choosePlayersScene;
+        return choosePlayersScene;
     }
 
     //metoda setNames do ktheje nje Scene -> VIEW PER TE VENDOSUR EMRAT
-    public static Scene setNames(Stage stage, Scene oldScene, int playersNum){
+    public static Scene setNames(Stage stage, Scene oldScene, int playersNum) {
         Scene setNamesScene;
 
         //zgjedhim layout -> BorderPane
         BorderPane setPlayerNames = new BorderPane();
 
         //setting top section layout -> HBox
-        HBox top = new HBox(57);
+        VBox top = new VBox();
+
+        HBox btnBox = new HBox();
 
         //goBack button
         Button goBack = new Button("←");
         goBack.getStyleClass().add("goBackBtn");
         goBack.setOnMouseClicked(e -> stage.setScene(oldScene));
+        btnBox.getChildren().add(goBack);
 
         //topLabel
+        HBox labelBox = new HBox();
         Label hintLabel = new Label("Vendosni emrat e lojtareve!");
-        hintLabel.getStyleClass().add("welcomeLabel");
-        hintLabel.setPadding(new Insets(7));
-        top.getChildren().addAll(goBack, hintLabel);
+        labelBox.getChildren().add(hintLabel);
+        labelBox.setAlignment(Pos.CENTER);
+
+        top.getChildren().addAll(btnBox,labelBox);
 
         //konfigurojme top Section
         setPlayerNames.setTop(top);
@@ -147,6 +185,9 @@ public class Player {
         //TextFields
         TextField player1 = new TextField();
         player1.setPromptText("Lojtari i pare");
+        //nese kemi lojtar te loguar -> vendos emrin e tij si tekst
+        if (User.pl.getUserSigned())
+            player1.setText(User.pl.getName());
 
         TextField player2 = new TextField();
         player2.setPromptText("Lojtari i dyte");
@@ -160,11 +201,11 @@ public class Player {
         //vendosim player1 ne layout pasi do e kemi ne cdo rast
         names.getChildren().add(player1);
 
-        if (playersNum>1)//kur zgjedhim me shume se 1 player
+        if (playersNum > 1)//kur zgjedhim me shume se 1 player
             names.getChildren().add(player2);
-        if (playersNum>2)//kur zgjedhim me shume se 2 player
+        if (playersNum > 2)//kur zgjedhim me shume se 2 player
             names.getChildren().add(player3);
-        if (playersNum==4)//kur zgjedhim 4 player
+        if (playersNum == 4)//kur zgjedhim 4 player
             names.getChildren().add(player4);
 
         names.setAlignment(Pos.TOP_CENTER);
@@ -179,12 +220,12 @@ public class Player {
             //mbledhim tekstet ne te gjitha text fields
             String[] playerNames = {player1.getText(), player2.getText(), player3.getText(), player4.getText()};
 
-            TextField[] playersInput = {player1,player2,player3,player4};
-            if (Main.validateFormNotEmpty(playersNum, playersInput,createGame)){
-                newGame = new Game(playersNum, playerNames, stage);
-            } else {
+            TextField[] playersInput = {player1, player2, player3, player4};
+            if (Main.validateFormNotEmpty(playersNum, playersInput, createGame)) {
                 createGame.setDisable(true);
                 valErrorLabel.setText("Emri eshte bosh!");
+            } else {
+                newGame = new Game(playersNum, playerNames, stage);
             }
         });
 
@@ -220,7 +261,7 @@ public class Player {
         names.getChildren().add(lowerBtn);
 
         //Layout Settings
-        names.setPadding(new Insets(50, 0, 0 , 0));
+        names.setPadding(new Insets(50, 0, 0, 0));
         setPlayerNames.setCenter(names);
         setPlayerNames.setStyle("-fx-background-image: url('public/images/throwingDices.jpg')");
 
@@ -228,5 +269,55 @@ public class Player {
         setNamesScene = new Scene(setPlayerNames, 500, 400);
         setNamesScene.getStylesheets().add("public/styles/game.css");
         return setNamesScene;
+    }
+
+
+    public static ResultSet dbAction(String query, int action) {
+        String url = "jdbc:mysql://localhost:3306/game";
+        String user = "root", pass = "thisgonnabesomepass";
+        Connection connect = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        int res;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection(url, user, pass);
+            statement = connect.createStatement();
+            if (action==0)
+                resultSet = statement.executeQuery(query);
+            else if (action==1)
+                 res = statement.executeUpdate(query);
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public static Player signIn(String userName, String password) {
+        String query = "SELECT id, name, username, highscore FROM user WHERE username='" + userName + "' AND password='"+password+"'";
+        int id;
+        String name;
+        String username;
+        int highscore;
+        ResultSet result = dbAction(query, 0);
+
+        try {
+            if (result.next()) {
+                id = result.getInt("id");
+                name = result.getString("name");
+                username = result.getString("username");
+                highscore = result.getInt("highscore");
+                return new Player(id, name, username, highscore);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void signUp(String name, String userName, String password){
+        String query = "INSERT INTO user (name, username, password, highscore) VALUES ('"+name+"','"+userName+"','"+password+"',0)";
+        ResultSet res = dbAction(query, 1);
     }
 }

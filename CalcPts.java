@@ -61,8 +61,6 @@ public class CalcPts {
 
         }
 
-        System.out.println(pts);
-
         return pts;
     }
 

@@ -10,18 +10,14 @@
     -fx-min-width: 54px;
     -fx-min-height: 54px;
     -fx-background-size: contain;
-    -fx-border-color: black;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
 }
 .check-box .box{
     -fx-scale-x:0;
     -fx-scale-y:0;
 }
 .check-box:selected{
-    -fx-scale-x:1.1;
-    -fx-scale-y:1.1;
-    -fx-translate-y: -5px;
+    -fx-scale-x:1.2;
+    -fx-scale-y:1.2;
 }
 
 .label {
@@ -38,7 +34,10 @@
 .list-view {
     -fx-max-width: 200px;
     -fx-background-color: transparent;
-    -fx-min-height: 470px;
+}
+
+.bigList {
+    -fx-min-height: 450px;
 }
 
 .list-cell {

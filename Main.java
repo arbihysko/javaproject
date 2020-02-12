@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -31,8 +30,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         BorderPane menuLayout = new BorderPane();
 
         //Vendosim lart 1 Label per welcome
-        Label topLabel = new Label("WELCOME TO THE GAME!");
-        topLabel.getStyleClass().add("welcomeLabel");
+        Label topLabel = new Label("WELCOME TO THE GAME");
         menuLayout.setTop(topLabel); //konfiguron ne layout
 
         //Center content -> VBox
@@ -44,16 +42,20 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         //Set new Scene -> CHOOSE PLAYER
         startGame.setOnMouseClicked(e -> stage.setScene(Player.choose(stage, menuScene)));
 
-        //Load Game nga filet TODO
-        Button loadGame = new Button("Load Game");
-
-        center.getChildren().addAll(startGame, loadGame);//konfigurojme ne VBox
+        center.getChildren().add(startGame);//konfigurojme ne VBox
         center.setAlignment(Pos.CENTER);//pozicionojme ne qender
         menuLayout.setCenter(center);//konfigurojme VBox -> layout
 
         //Butoni per tu loguar
         Button logIn = new Button("Log In");
-        logIn.setOnAction(e -> popWindow.logIn());
+        logIn.setOnAction(e -> {
+            User.logIn();
+            if (User.pl.getUserSigned()) {
+                String oldLabel = topLabel.getText();
+                topLabel.setText(oldLabel + " " + User.pl.getName().toUpperCase());
+                logIn.setVisible(false);
+            }
+        });
         logIn.getStyleClass().add("signUpBtn");
 
         menuLayout.setBottom(logIn);
@@ -83,12 +85,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     }
 
     public static boolean validateFormNotEmpty(int plNum, TextField[] input, Button submit) {
-        boolean val = true;
+        boolean val = false;
         for (int i = 0; i < plNum; i++) {
             if (input[i].getText().equals("")) {
                 input[i].getStyleClass().add("fieldValError");
                 submit.setDisable(true);
-                val = false;
+                val = true;
             }
         }
         return val;

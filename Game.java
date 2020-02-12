@@ -58,7 +58,7 @@ public class Game {
     };
 
     //random object
-    Random rand = new Random();
+    Random rand = new Random(System.currentTimeMillis());
 
     //deklarimi i ListViews qe do te perdoren per te shfaqur piket
     ListView<String> raundsListView;
@@ -84,6 +84,9 @@ public class Game {
     public Game(int num, String[] names, Stage stage){
         this.stage = stage;
         playerNumber = num;
+        for (int i = 0; i < num; i++) {
+            names[i] = Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1,names[i].length()).toLowerCase();
+        }
         playerNames = names;
         points = new int[num][17];
         this.generateGame();
@@ -93,6 +96,17 @@ public class Game {
     public void generateGame(){
         //setting the layout -> BORDERPANE
         BorderPane gameLayout = new BorderPane();
+
+        HBox gameIndicator = new HBox(50);
+        Label raundIndicator = new Label("Raundi 1");
+        Label playerIndicator = new Label(playerNames[0]);
+        Label tryIndicator = new Label("Shanci 1");
+
+        gameIndicator.getChildren().addAll(playerIndicator,raundIndicator,tryIndicator);
+        gameIndicator.setAlignment(Pos.CENTER);
+        gameIndicator.setPadding(new Insets(0,0,20,0));
+        gameLayout.setTop(gameIndicator);
+        BorderPane.setAlignment(gameIndicator, Pos.CENTER);
 
         //tableTop
         VBox centerUnit = new VBox(10);
@@ -119,12 +133,14 @@ public class Game {
 
         //shfaq piket per player1
         playerOnePts = new ListView<>();
+        playerOnePts.getStyleClass().add("bigList");
         scores.getChildren().addAll(raundsListView, playerOnePts);
 
         if (playerNumber>1){
             Label player2 = new Label(playerNames[1]);
             tableHeader.getChildren().add(player2);
             playerTwoPts = new ListView<>();
+            playerTwoPts.getStyleClass().add("bigList");
             scores.getChildren().add(playerTwoPts);
         }
 
@@ -132,6 +148,7 @@ public class Game {
             Label player3 = new Label(playerNames[2]);
             tableHeader.getChildren().add(player3);
             playerThreePts = new ListView<>();
+            playerThreePts.getStyleClass().add("bigList");
             scores.getChildren().add(playerThreePts);
         }
 
@@ -139,6 +156,7 @@ public class Game {
             Label player4 = new Label(playerNames[3]);
             tableHeader.getChildren().add(player4);
             playerFourPts = new ListView<>();
+            playerFourPts.getStyleClass().add("bigList");
             scores.getChildren().add(playerFourPts);
         }
 
@@ -155,7 +173,7 @@ public class Game {
         //Do te mbaje zarat
         HBox dices = new HBox(20);
 
-        //inizializon zarat me nje vlere random
+        //inizializon zarat me nje vlere random dhe vendosim figurat
         int randomNr = rand.nextInt(6)+1;
         dice1 = new CheckBox(""+randomNr);
         dice1.setStyle("-fx-background-image: url('public/images/zari-"+randomNr+".png')");
@@ -189,11 +207,20 @@ public class Game {
 
         skip.setOnMouseClicked(e -> {
             if ((raund==5||raund==14)&&playerAtTurn==playerNumber-1)
-                updateSpecial(playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+                updateSpecial(stage, playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts, playerNames);
             else {
                 playerAtTurn++;
                 chance = 0;
             }
+
+            int thisRaund=raund+1;
+            if (playerAtTurn==playerNumber)
+                thisRaund=raund+2;
+
+            playerIndicator.setText(playerNames[(playerAtTurn==playerNumber)?0:playerAtTurn]);
+            raundIndicator.setText("Raundi " + thisRaund);
+            tryIndicator.setText("Shanci 1");
+
             throwDices.setText("Hidh Zaret");
             throwDices.setDisable(false);
             skip.setDisable(true);
@@ -210,7 +237,7 @@ public class Game {
 
         //gjenerojme nje numer random per sa here do behet animimi
         timerTurnMax = rand.nextInt(5)+10;
-
+//        timerTurnMax = 2;
         throwDices.setOnAction(event -> {
 
 
@@ -271,7 +298,6 @@ public class Game {
                         dicesVals[3] = Integer.parseInt(dice4.getText());
                         dicesVals[4] = Integer.parseInt(dice5.getText());
 
-                        System.out.println(Arrays.toString(dicesVals));
 
                         if (playerAtTurn == playerNumber){
                             playerAtTurn = 0;
@@ -281,15 +307,21 @@ public class Game {
                         points[playerAtTurn][raund] = CalcPts.calcPoits(raund, dicesVals, points, playerAtTurn);
                         updatePtsList(points[playerAtTurn][raund], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
 
-                        System.out.println("Chance: "+ chance + "\nRaund: "+raund+"\nTurn: "+playerAtTurn+"\n");
+//                        System.out.println("Chance: "+ chance + "\nRaund: "+raund+"\nTurn: "+playerAtTurn+"\n");
 
-                        if ((raund==5||raund==14)&&chance==3&&(playerAtTurn==(playerNumber-1)))
-                            updateSpecial(playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
+                        if ((raund==5||raund==14)&&chance==3&&(playerAtTurn==(playerNumber-1))) {
+                            updateSpecial(stage, playerNumber, points, dicesVals, playerOnePts, playerTwoPts, playerThreePts, playerFourPts, playerNames);
+                        }
 
                         if (chance==3) {
                             playerAtTurn++;
                             chance = 0;
                         }
+
+                        tryIndicator.setText("Shanci "+(chance+1));
+                        playerIndicator.setText(playerNames[(playerAtTurn==playerNumber)?0:playerAtTurn]);
+                        raundIndicator.setText("Raundi "+(raund+1));
+
                     });
 
                 }
@@ -384,7 +416,7 @@ public class Game {
         }
     }
 
-    static void updateSpecial(int playerNumber, int[][] points, int[] dicesVals, ListView<Integer> playerOnePts, ListView<Integer> playerTwoPts, ListView<Integer> playerThreePts, ListView<Integer> playerFourPts) {
+    static void updateSpecial(Stage stage, int playerNumber, int[][] points, int[] dicesVals, ListView<Integer> playerOnePts, ListView<Integer> playerTwoPts, ListView<Integer> playerThreePts, ListView<Integer> playerFourPts, String[] playerNames) {
         if (raund==5) {
             raund++;
             for (int i = 0; i < playerNumber; i++) {
@@ -414,7 +446,11 @@ public class Game {
                 points[i][16] = CalcPts.calcPoits(16, dicesVals, points, playerAtTurn);
                 updatePtsList(points[i][16], playerOnePts, playerTwoPts, playerThreePts, playerFourPts);
             }
-            //AlertBox.display("game over", "najs");
+//            game over
+            if (playerNumber==1)
+                EndGame.endGameSolo(stage, points[0][16]);
+            else
+                EndGame.multiPlayerEnd(stage, playerNumber,points,playerNames);
         }
     }
 
